@@ -123,21 +123,10 @@ def main():
             for i, task in enumerate(tasks):
                 print(f"{i}: {task['name']} (Class: {task.get('class','')}, Due: {task.get('due','')})")
 
-            args_input = input("Enter arguments formatted as follows: days, hours per day")
-            args = {}
-
-            for pair in args_input.split(","):
-                if "=" in pair:
-                    k, v = pair.split("=")
-                    args[k.strip()] = v.strip()
-
-            result = generate_study_plan_from_tasks(tasks, **args)
-
-            result = reason_task_from_task(tasks, task_index)
-            print("Reasoned task.")
+            result = generate_study_plan_from_tasks(tasks)
 
             tool_definition = {
-                "function_declarations": [reason_task] 
+                "function_declarations": [generate_study_plan] 
             }
 
             chat = client.chats.create(
@@ -147,7 +136,7 @@ def main():
                 )
             )
 
-            prompt = f"Please help me understand and get started with this: {tasks[task_index]}"
+            prompt = f"Please help me understand and get started with this: {tasks}"
             response = chat.send_message(prompt)
 
             print("Generated Study Plan from Task.")
