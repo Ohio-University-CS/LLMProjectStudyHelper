@@ -1,26 +1,18 @@
-def reason_task_from_task(tasks, task_index):
-    if(task_index >= len(tasks)):
-        return {"task": "No tasks to schedule."}
-    
-    return {"task": tasks[task_index]}
+def reason_task_prompt(task):
+    return f"""
+    You are helping a student get started with an assignment.
 
-reason_task = {
-    "name": "reason_task",
-    "description": "Reason about this task. Help the student get started.",
-    "parameters": {
-        "type": "OBJECT",
-        "properties": {
-            "task": {
-                "type": "OBJECT",
-                "properties": {
-                    "name": {"type": "STRING"},
-                    "class": {"type": "STRING"},
-                    "body": {"type": "STRING"},
-                    "due": {"type": "STRING"}
-                },
-                "required": ["name"]
-            }
-        },
-        "required": ["task"]
-    }
-}
+    Reason about the following task and provide:
+    - What the task involves
+    - Steps to start
+    - Challenges
+    - A scheduled plan
+
+    Task Information:
+    Name: {task.get("name", "")}
+    Class: {task.get("class", "")}
+    Body: {task.get("body", "")}
+    Due Date: {task.get("due", "")}
+
+    DO NOT ASK QUESTIONS. ONLY REASON ABOUT THE TASK.
+    """

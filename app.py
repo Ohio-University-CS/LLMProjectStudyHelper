@@ -5,13 +5,11 @@ from functions.create_task import create_task
 from functions.update_task import update_task
 from functions.delete_task import delete_task
 
-from functions.reason_task import reason_task_from_task
-from functions.reason_task import reason_task
+from functions.reason_task import reason_task_prompt
+from functions.generate_study_plan import generate_study_plan_prompt
 
-from functions.generate_study_plan import generate_study_plan_from_tasks
-from functions.generate_study_plan import generate_study_plan
 
-from google.genai import types # Add this to your imports
+from google.genai import types
 
 # from functions.analyze_image import # Not done. Unable to do without proper API key setup.
 # from tools.generate_image import # Not done. Unable to do without proper API key setup.
@@ -24,9 +22,10 @@ def main():
         "name": "Test Task",
         "class": "CS 2401",
         "body": "Test Body.",
-        "due_date": None
+        "due": None
     }]
 
+    print("")
     print("Collin Blumenauer - CS3560 LLM Project")
     print("Class study helper")
 
@@ -39,6 +38,7 @@ def main():
             4. Reason Task
             5. Generate Study Plan
             6. Exit
+            
             """
         )
 
@@ -97,24 +97,14 @@ def main():
             if(task_index < 0 or task_index >= len(tasks)):
                 print("Invalid task index.")
                 continue;
-
-            result = reason_task_from_task(tasks, task_index)
-            print("Reasoned task.")
-
-            tool_definition = {
-                "function_declarations": [reason_task] 
-            }
+            
+            prompt = reason_task_prompt(tasks[task_index])
 
             chat = client.chats.create(
-                model="gemini-2.0-flash",
-                config=types.GenerateContentConfig(
-                    tools=[tool_definition]
-                )
+                model="gemini-3.1-flash-lite-preview",
             )
 
-            prompt = f"Please help me understand and get started with this: {tasks[task_index]}"
             response = chat.send_message(prompt)
-
             print(response.text)
 
         if command == 5:
@@ -123,23 +113,15 @@ def main():
             for i, task in enumerate(tasks):
                 print(f"{i}: {task['name']} (Class: {task.get('class','')}, Due: {task.get('due','')})")
 
-            result = generate_study_plan_from_tasks(tasks)
-
-            tool_definition = {
-                "function_declarations": [generate_study_plan] 
-            }
+            prompt = generate_study_plan_prompt(tasks)
 
             chat = client.chats.create(
-                model="gemini-2.0-flash",
-                config=types.GenerateContentConfig(
-                    tools=[tool_definition]
-                )
+                model="gemini-3.1-flash-lite-preview",
             )
 
-            prompt = f"Please help me understand and get started with this: {tasks}"
             response = chat.send_message(prompt)
+            print(response.text)
 
-            print("Generated Study Plan from Task.")
         if command == 6:
             break
 

@@ -1,26 +1,20 @@
-def generate_study_plan_from_tasks(tasks):
-    return {"tasks": tasks}
+import json
 
-generate_study_plan = {
-    "name": "generate_study_plan",
-    "description": "Generates a study plan from a comma-seperated list of tasks, each defined with elements such as name, class, body, due date.",
-    "parameters": {
-        "type": "object",
-        "properties": {
-            "tasks": {
-                "type": "array",
-                "description": "List of tasks, each with a name, class, body, and optional due date.",
-                "items": {
-                    "type": "object",
-                    "properties": {
-                        "name": {"type": "string"},
-                        "class": {"type": "string"},
-                        "body": {"type": "string"},
-                        "due": {"type": "string"}
-                    }
-                }
-            }
-        },
-        "required": ["tasks"]
-    },
-}
+def generate_study_plan_prompt(tasks):
+    task_text = json.dumps(tasks, indent=2)
+
+    return f"""
+    You are an academic study planner.
+
+    Given the following list of assignments, create a structured study plan.
+
+    Requirements:
+    - Prioritize tasks by due date if available.
+    - Break work into reasonable study sessions (not by the hour, but based on a realistic daily allocated amount of time)
+    - Suggest an order for tasks
+    - Include estimated focus areas.
+    - DO NOT ASK THE USER FOR QUESTIONS. PURELY REASON.
+
+    Tasks:
+    {task_text}
+    """
