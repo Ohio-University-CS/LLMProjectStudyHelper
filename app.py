@@ -45,18 +45,18 @@ def main():
         command = int(command)
 
         if command == 1:
-            args_input = input("Enter arguments formatted as follows: name, body, due date. Seperated by commas.")
-            args = {}
+            args_input = input("Enter arguments formatted as follows: name, class, body, due date. Seperated by commas. ")
+            task_name, class_name, task_body, due_date = [x.strip() for x in args_input.split(",")]
 
-            for pair in args_input.split(","):
-                if "=" in pair:
-                    k, v = pair.split("=")
-                    args[k.strip()] = v.strip()
-
-            result = create_task(tasks, **args)
+            result = create_task(tasks, task_name, class_name, task_body, due_date)
             print("Created task.")
         
         if command == 2:
+
+            print("Current tasks:")
+            for i, task in enumerate(tasks):
+                print(f"{i}: {task['name']} (Class: {task.get('class','')}, Due: {task.get('due','')})")
+
             task_index = input("Enter task index to update: ")
             task_index = int(task_index)
 
@@ -64,19 +64,14 @@ def main():
                 print("Invalid task index.")
                 continue;
 
-            # Need a way to print all tasks with index.
-            args_input = input("Enter arguments formatted as follows: name, body, due date. Seperated by commas.")
-            args = {}
+            args_input = input("Enter arguments formatted as follows: name, class, body, due date. Seperated by commas. ")
+            task_name, class_name, task_body, due_date = [x.strip() for x in args_input.split(",")]
 
-            for pair in args_input.split(","):
-                if "=" in pair:
-                    k, v = pair.split("=")
-                    args[k.strip()] = v.strip()
-
-            result = update_task(tasks, task_index, **args)
+            result = update_task(tasks, task_index, task_name, class_name, task_body, due_date)
             print("Updated task.")
 
         if command == 3:
+
             print("Current tasks:")
             for i, task in enumerate(tasks):
                 print(f"{i}: {task['name']} (Class: {task.get('class','')}, Due: {task.get('due','')})")
@@ -88,17 +83,10 @@ def main():
                 print("Invalid task index.")
                 continue;
 
-            args_input = input("Enter arguments formatted as follows: task index")
-            args = {}
-
-            for pair in args_input.split(","):
-                if "=" in pair:
-                    k, v = pair.split("=")
-                    args[k.strip()] = v.strip()
-
-            delete_task(tasks, task_index, **args)
+            delete_task(tasks, task_index, args)
             print("Deleted task.")
         if command == 4:
+
             print("Current tasks:")
             for i, task in enumerate(tasks):
                 print(f"{i}: {task['name']} (Class: {task.get('class','')}, Due: {task.get('due','')})")
@@ -130,6 +118,7 @@ def main():
             print(response.text)
 
         if command == 5:
+
             print("Current tasks:")
             for i, task in enumerate(tasks):
                 print(f"{i}: {task['name']} (Class: {task.get('class','')}, Due: {task.get('due','')})")

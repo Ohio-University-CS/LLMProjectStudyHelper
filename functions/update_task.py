@@ -1,4 +1,4 @@
-def update_task(tasks, task_index, name=None, body=None, due=None):
+def update_task(tasks, task_index, name=None, class_name=None, body=None, due=None):
     if(task_index >= len(tasks)):
         return {
             "status": "error", 
@@ -6,6 +6,8 @@ def update_task(tasks, task_index, name=None, body=None, due=None):
     
     if(name):
         tasks[task_index]["name"] = name
+    if(class_name):
+        tasks[task_index]["class"] = class_name
     if(body):
         tasks[task_index]["body"] = body
     if(due):
