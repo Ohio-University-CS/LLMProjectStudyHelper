@@ -3,10 +3,10 @@ CS 3650 - LLM Project
 Just a study helper application. Allows management and reasoning of tasks.
 
 Each task is defined as:
--Name
--Class
--Body
--Due Date
+1. Name
+2. Class
+3. Body
+4. Due Date
 
 The application implements the following functionality:
 
