@@ -14,6 +14,8 @@ def generate_study_plan_prompt(tasks):
     - Suggest an order for tasks
     - Include estimated focus areas.
     - DO NOT ASK THE USER FOR QUESTIONS. PURELY REASON.
+    - Do not repeat the table.
+    - Stop after the table.
 
     Tasks:
     {task_text}
